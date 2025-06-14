@@ -1,0 +1,9 @@
+# render.yaml  (put in the *root* of the repo)
+services:
+  - type: web
+    name: attendence-api
+    env: dotnet
+    rootDir: AttendenceApi          # where your *.csproj lives
+    buildCommand: dotnet publish -c Release -o ./publish
+    startCommand: dotnet AttendenceApi.dll
+    plan: free                      # make sure it’s the free tier
