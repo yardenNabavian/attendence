@@ -2,13 +2,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# copy csproj & restore first (better layer-caching)
-COPY AttendenceApi/AttendenceApi.csproj ./AttendenceApi/
-RUN dotnet restore ./AttendenceApi/AttendenceApi.csproj
+# copy the project file first (enables layer-cache)
+COPY *.csproj ./
+RUN dotnet restore
 
 # copy the rest of the source and publish
-COPY AttendenceApi/ ./AttendenceApi/
-WORKDIR /src/AttendenceApi
+COPY . .
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
 # ---------- runtime stage ----------
@@ -16,7 +15,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# Render sets $PORT at runtime (default 10000). Listen on it.
+# Render provides $PORT=10000; fall back to 8080 when run locally
 ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT:-8080}
 EXPOSE 8080
 
