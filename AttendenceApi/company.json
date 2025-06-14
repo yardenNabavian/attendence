@@ -1,0 +1,21 @@
+{
+  "Platoon1": [
+    {
+      "Id": 1,
+      "Name": "Alpha A",
+      "Status": "Present",
+      "Location": "Base",
+      "Notes": null
+    }
+  ],
+  "Platoon2": [
+    {
+      "Id": 2,
+      "Name": "Bravo B",
+      "Status": "Present",
+      "Location": "Base",
+      "Notes": null
+    }
+  ],
+  "Command": []
+} 
