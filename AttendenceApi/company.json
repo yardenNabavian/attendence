@@ -1,21 +1,248 @@
 {
   "Platoon1": [
-    {
-      "Id": 1,
-      "Name": "Alpha A",
-      "Status": "Present",
-      "Location": "Base",
-      "Notes": null
-    }
+      {
+          "Id": 8427544,
+          "Name": "צפריר בוהק",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8422432,
+          "Name": "עמית צי חכמוב",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8255838,
+          "Name": "עז שלם בן אוליאל",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8584834,
+          "Name": "עופרי מצפה",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8444764,
+          "Name": "עומר צי איגנה",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8352077,
+          "Name": "לידור י מלכה",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8336918,
+          "Name": "ליאור זנזורי",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8577480,
+          "Name": "יניר פקרסקי",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8420330,
+          "Name": "יונתן שורץ",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8592365,
+          "Name": "יואב נחום",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 9091897,
+          "Name": "אליאב זיגל",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8394791,
+          "Name": "אורי איאסו",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8357355,
+          "Name": "אורי ורדי",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8352360,
+          "Name": "אופיר שושן",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8424691,
+          "Name": "אהד אברהם",
+          "Status": "Present",
+          "Location": "יפתח"
+      }
   ],
   "Platoon2": [
-    {
-      "Id": 2,
-      "Name": "Bravo B",
-      "Status": "Present",
-      "Location": "Base",
-      "Notes": null
-    }
+      {
+          "Id": 8778950,
+          "Name": "שלו קודאי",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8691396,
+          "Name": "רועי פרינץ",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8667084,
+          "Name": "עילי פישר",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8707464,
+          "Name": "נריה חי חברוני",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8704961,
+          "Name": "ליאור גיגי",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8704247,
+          "Name": "דניאל גגציס",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8691793,
+          "Name": "דוד אנדרייב",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 7728947,
+          "Name": "אנדרי מקגרגור",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8526318,
+          "Name": "אלישיב זערור",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 9092324,
+          "Name": "אליה אל אברגל",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8018640,
+          "Name": "אלחנן ביר",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8436085,
+          "Name": "איתי אלטר",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 5803821,
+          "Name": "איליזיר רפאילוב",
+          "Status": "Present",
+          "Location": "יפתח"
+      }
   ],
-  "Command": []
-} 
+  "Command": [
+      {
+          "Id": 8571078,
+          "Name": "נועם יאיר מנחם",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 6867908,
+          "Name": "יצחק זרה",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8280173,
+          "Name": "שיר ארליך",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 7393338,
+          "Name": "עמירן קינן",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8683711,
+          "Name": "נריה זקן",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8668910,
+          "Name": "נווה שרעבי",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8381844,
+          "Name": "ירדן בנ נבאביאן",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 6185973,
+          "Name": "יעקב דהוקי",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 5321691,
+          "Name": "יובל וגנר",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8096724,
+          "Name": "דוד פנדוס",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8653556,
+          "Name": "איתמר ש ענאקי",
+          "Status": "Present",
+          "Location": "יפתח"
+      },
+      {
+          "Id": 8315593,
+          "Name": "איתי לובישס",
+          "Status": "Present",
+          "Location": "יפתח"
+      }
+  ]
+}
