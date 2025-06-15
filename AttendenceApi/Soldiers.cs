@@ -1,21 +1,30 @@
 using Google.Cloud.Firestore;
 using Google.Apis.Auth.OAuth2;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.IO;
 namespace AttendenceApi;
 
 public class Company 
 {
     private Dictionary<Platoon, List<Soldier>> _platoons { get; set; }
     private readonly FirestoreDb _db;
-    private readonly string _legacyFilePath;
 
     public Company()
     {
         // Initialize Firestore
         var projectId = Environment.GetEnvironmentVariable("FIREBASE_PROJECT_ID");
         var credentialsJson = Environment.GetEnvironmentVariable("FIREBASE_SERVICE_ACCOUNT");
+        var credentialsFile = Environment.GetEnvironmentVariable("FIREBASE_SERVICE_ACCOUNT_FILE");
+        if (string.IsNullOrWhiteSpace(credentialsJson) && !string.IsNullOrWhiteSpace(credentialsFile))
+        {
+            // Resolve relative paths against the application base directory
+            var resolvedPath = Path.IsPathRooted(credentialsFile)
+                ? credentialsFile
+                : Path.Combine(AppContext.BaseDirectory, credentialsFile);
+
+            if (File.Exists(resolvedPath))
+            {
+                credentialsJson = File.ReadAllText(resolvedPath);
+            }
+        }
         if (string.IsNullOrWhiteSpace(projectId) || string.IsNullOrWhiteSpace(credentialsJson))
         {
             throw new InvalidOperationException("FIREBASE_PROJECT_ID or FIREBASE_SERVICE_ACCOUNT environment variables are not set.");
@@ -35,15 +44,7 @@ public class Company
             {Platoon.Command, new List<Soldier>()}
         };
 
-        _legacyFilePath = Path.Combine(AppContext.BaseDirectory, "company.json");
-
         LoadFromFirestore();
-
-        // If Firestore is empty but legacy file exists, import once
-        if (IsFirestoreEmpty() && File.Exists(_legacyFilePath))
-        {
-            LoadFromLegacyFileAndPersist();
-        }
     }
 
     public bool AddSoldier(Platoon platoon, Soldier soldier)
@@ -124,42 +125,6 @@ public class Company
                 var soldier = doc.ConvertTo<Soldier>();
                 _platoons[platoon].Add(soldier);
             }
-        }
-    }
-
-    private bool IsFirestoreEmpty()
-    {
-        return _platoons.All(kvp => kvp.Value.Count == 0);
-    }
-
-    private void LoadFromLegacyFileAndPersist()
-    {
-        try
-        {
-            var json = File.ReadAllText(_legacyFilePath);
-            var options = new JsonSerializerOptions
-            {
-                Converters = { new JsonStringEnumConverter() }
-            };
-            var data = JsonSerializer.Deserialize<Dictionary<Platoon, List<Soldier>>>(json, options);
-            if (data is null)
-                return;
-
-            foreach (var kvp in data)
-            {
-                foreach (var soldier in kvp.Value)
-                {
-                    if (!_platoons[kvp.Key].Any(s => s.Id == soldier.Id))
-                    {
-                        _platoons[kvp.Key].Add(soldier);
-                        SaveSoldierToFirestore(kvp.Key, soldier);
-                    }
-                }
-            }
-        }
-        catch
-        {
-            // ignore errors - legacy import best effort
         }
     }
 }

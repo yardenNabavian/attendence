@@ -192,6 +192,18 @@
         table.style.width = '100%';
         table.style.borderCollapse = 'collapse';
 
+        // Header row
+        const headerTr = document.createElement('tr');
+        ['שם', 'סטטוס', 'מיקום', 'הערות'].forEach(text => {
+            const th = document.createElement('td');
+            th.textContent = text;
+            th.style.fontWeight = '600';
+            th.style.textAlign = 'center';
+            th.style.padding = '.7rem .5rem';
+            headerTr.appendChild(th);
+        });
+        table.appendChild(headerTr);
+
         soldiers.forEach(s => {
             const tr = document.createElement('tr');
             tr.style.background = '#fff';
@@ -215,7 +227,7 @@
                 select.appendChild(opt);
             });
             select.addEventListener('change', () => {
-                updateSoldier(platoonId, s.id, Number(select.value), locationInput.value);
+                updateSoldier(platoonId, s.id, Number(select.value), locationInput.value, notesInput.value);
             });
             statusTd.appendChild(select);
             statusTd.style.padding = '.5rem';
@@ -227,14 +239,26 @@
             locationInput.value = s.location ?? '';
             locationInput.style.width = '100%';
             locationInput.addEventListener('change', () => {
-                updateSoldier(platoonId, s.id, Number(select.value), locationInput.value);
+                updateSoldier(platoonId, s.id, Number(select.value), locationInput.value, notesInput.value);
             });
             locationTd.appendChild(locationInput);
             locationTd.style.padding = '.5rem';
 
+            // Notes input
+            const notesTd = document.createElement('td');
+            const notesInput = document.createElement('input');
+            notesInput.type = 'text';
+            notesInput.value = s.notes ?? s.Notes ?? '';
+            notesInput.addEventListener('change', () => {
+                updateSoldier(platoonId, s.id, Number(select.value), locationInput.value, notesInput.value);
+            });
+            notesTd.appendChild(notesInput);
+            notesTd.style.padding = '.5rem';
+
             tr.appendChild(nameTd);
             tr.appendChild(statusTd);
             tr.appendChild(locationTd);
+            tr.appendChild(notesTd);
 
             table.appendChild(tr);
         });
@@ -242,13 +266,13 @@
         return table;
     }
 
-    async function updateSoldier(platoonId, soldierId, statusVal, locationVal) {
+    async function updateSoldier(platoonId, soldierId, statusVal, locationVal, notesVal) {
         const info = platoonMap[platoonId];
         try {
             await fetch(`/api/platoons/${info.api}/soldiers/${soldierId}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: statusVal, location: locationVal, notes: null })
+                body: JSON.stringify({ status: statusVal, location: locationVal, notes: notesVal })
             });
         } catch {
             alert('שגיאה בעדכון החייל');

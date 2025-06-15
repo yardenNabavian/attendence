@@ -93,3 +93,9 @@ $RECYCLE.BIN/
 
 # Allow initial data file to be committed
 !AttendenceApi/company.json 
+
+# Environment files
+.env* 
+
+# Firebase credential
+*.firebase.json 
