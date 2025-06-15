@@ -1,17 +1,28 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.IO;
-using System.Linq;
+using Google.Cloud.Firestore;
+using Google.Apis.Auth.OAuth2;
 namespace AttendenceApi;
 
 public class Company 
 {
     private Dictionary<Platoon, List<Soldier>> _platoons { get; set; }
-    private readonly string _filePath;
+    private readonly FirestoreDb _db;
 
     public Company()
     {
-        _filePath = Path.Combine(AppContext.BaseDirectory, "company.json");
+        // Initialize Firestore
+        var projectId = Environment.GetEnvironmentVariable("FIREBASE_PROJECT_ID");
+        var credentialsJson = Environment.GetEnvironmentVariable("FIREBASE_SERVICE_ACCOUNT");
+        if (string.IsNullOrWhiteSpace(projectId) || string.IsNullOrWhiteSpace(credentialsJson))
+        {
+            throw new InvalidOperationException("FIREBASE_PROJECT_ID or FIREBASE_SERVICE_ACCOUNT environment variables are not set.");
+        }
+
+        var credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromJson(credentialsJson);
+        _db = new FirestoreDbBuilder
+        {
+            ProjectId = projectId,
+            Credential = credential
+        }.Build();
 
         _platoons = new Dictionary<Platoon, List<Soldier>>
         {
@@ -20,19 +31,18 @@ public class Company
             {Platoon.Command, new List<Soldier>()}
         };
 
-        LoadFromFile();
+        LoadFromFirestore();
     }
 
     public bool AddSoldier(Platoon platoon, Soldier soldier)
     {
-        // Ensure ID is unique across all platoons
         if (_platoons.Values.Any(list => list.Any(s => s.Id == soldier.Id)))
         {
             return false;
         }
 
         _platoons[platoon].Add(soldier);
-        SaveToFile();
+        SaveSoldierToFirestore(platoon, soldier);
         return true;
     }
 
@@ -42,7 +52,7 @@ public class Company
         if (soldier is not null)
         {
             _platoons[platoon].Remove(soldier);
-            SaveToFile();
+            DeleteSoldierFromFirestore(platoon, soldierId);
         }
     }
 
@@ -61,7 +71,7 @@ public class Company
             soldier.Notes = notes;
         }
 
-        SaveToFile();
+        UpdateSoldierInFirestore(platoon, soldier);
     }
 
     public List<Soldier> GetPlatoon(Platoon platoon)
@@ -74,50 +84,50 @@ public class Company
         return _platoons;
     }
 
-    private void SaveToFile()
+    private void SaveSoldierToFirestore(Platoon platoon, Soldier soldier)
     {
-        var options = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            Converters = { new JsonStringEnumConverter() }
-        };
-
-        var json = JsonSerializer.Serialize(_platoons, options);
-        File.WriteAllText(_filePath, json);
+        var docRef = _db.Collection("platoons").Document(platoon.ToString()).Collection("soldiers").Document(soldier.Id.ToString());
+        docRef.SetAsync(soldier).GetAwaiter().GetResult();
     }
 
-    private void LoadFromFile()
+    private void DeleteSoldierFromFirestore(Platoon platoon, int soldierId)
     {
-        if (!File.Exists(_filePath))
-            return;
+        var docRef = _db.Collection("platoons").Document(platoon.ToString()).Collection("soldiers").Document(soldierId.ToString());
+        docRef.DeleteAsync().GetAwaiter().GetResult();
+    }
 
-        try
+    private void UpdateSoldierInFirestore(Platoon platoon, Soldier soldier)
+    {
+        var docRef = _db.Collection("platoons").Document(platoon.ToString()).Collection("soldiers").Document(soldier.Id.ToString());
+        docRef.SetAsync(soldier).GetAwaiter().GetResult();
+    }
+
+    private void LoadFromFirestore()
+    {
+        foreach (var platoon in Enum.GetValues<Platoon>())
         {
-            var json = File.ReadAllText(_filePath);
-            var options = new JsonSerializerOptions
+            var soldiersSnap = _db.Collection("platoons").Document(platoon.ToString()).Collection("soldiers").GetSnapshotAsync().GetAwaiter().GetResult();
+            foreach (var doc in soldiersSnap.Documents)
             {
-                Converters = { new JsonStringEnumConverter() }
-            };
-
-            var data = JsonSerializer.Deserialize<Dictionary<Platoon, List<Soldier>>>(json, options);
-            if (data is not null)
-            {
-                _platoons = data;
+                var soldier = doc.ConvertTo<Soldier>();
+                _platoons[platoon].Add(soldier);
             }
-        }
-        catch
-        {
-            // If deserialization fails, ignore and keep default empty structure
         }
     }
 }
 
+[FirestoreData]
 public class Soldier
 {
+    [FirestoreProperty]
     public int Id { get; set; }
+    [FirestoreProperty]
     public string? Name { get; set; }
+    [FirestoreProperty]
     public Status Status { get; set; }
+    [FirestoreProperty]
     public string? Location { get; set; }
+    [FirestoreProperty]
     public string? Notes { get; set; }
 }
 
