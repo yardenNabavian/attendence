@@ -116,6 +116,17 @@
             font-size: 1rem;
         }
 
+        /* Mobile layout */
+        @media (max-width: 600px) {
+            .header-row { display: none; }
+            table, tr, td { display: block; width: 100%; }
+            tr { margin-bottom: 1rem; }
+            tr td { display: flex; justify-content: space-between; align-items: center; padding: .7rem .75rem; }
+            tr td:first-child { background: var(--card-bg); font-weight: 600; border-radius: var(--radius) var(--radius) 0 0; justify-content: center; }
+            tr td[data-label]::before { content: attr(data-label); margin-left: .75rem; font-weight: 500; color: #555; }
+            select, input[type="text"] { width: 60%; }
+        }
+
         @media (min-width: 600px) {
             h1 { font-size: 1.6rem; }
             .button { width: 50%; margin-left: auto; margin-right: auto; }
@@ -194,12 +205,14 @@
 
         // Header row
         const headerTr = document.createElement('tr');
+        headerTr.className = 'header-row';
         ['שם', 'סטטוס', 'מיקום', 'הערות'].forEach(text => {
             const th = document.createElement('td');
             th.textContent = text;
             th.style.fontWeight = '600';
             th.style.textAlign = 'center';
             th.style.padding = '.7rem .5rem';
+            th.setAttribute('data-label', text);
             headerTr.appendChild(th);
         });
         table.appendChild(headerTr);
@@ -213,11 +226,13 @@
 
             // Name cell
             const nameTd = document.createElement('td');
+            nameTd.setAttribute('data-label', 'שם');
             nameTd.textContent = s.name ?? '---';
             nameTd.style.padding = '.5rem';
 
             // Status select
             const statusTd = document.createElement('td');
+            statusTd.setAttribute('data-label', 'סטטוס');
             const select = document.createElement('select');
             Object.entries(statuses).forEach(([val, label]) => {
                 const opt = document.createElement('option');
@@ -234,6 +249,7 @@
 
             // Location input
             const locationTd = document.createElement('td');
+            locationTd.setAttribute('data-label', 'מיקום');
             const locationInput = document.createElement('input');
             locationInput.type = 'text';
             locationInput.value = s.location ?? '';
@@ -246,6 +262,7 @@
 
             // Notes input
             const notesTd = document.createElement('td');
+            notesTd.setAttribute('data-label', 'הערות');
             const notesInput = document.createElement('input');
             notesInput.type = 'text';
             notesInput.value = s.notes ?? s.Notes ?? '';
